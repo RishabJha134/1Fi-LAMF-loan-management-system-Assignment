@@ -1,0 +1,151 @@
+// Prisma Schema for Loan Management System (LMS) - LAMF
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum Definitions
+enum LoanProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum LoanApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  DISBURSED
+}
+
+enum LoanStatus {
+  ACTIVE
+  CLOSED
+  DEFAULTED
+}
+
+enum CollateralStatus {
+  PLEDGED
+  RELEASED
+}
+
+enum TransactionType {
+  DISBURSEMENT
+  REPAYMENT
+  INTEREST
+}
+
+// Models
+model LoanProduct {
+  id               String               @id @default(uuid())
+  name             String
+  description      String?
+  interestRate     Float                // Annual interest rate in percentage
+  maxLoanAmount    Float
+  minLoanAmount    Float
+  maxTenure        Int                  // Max tenure in months
+  processingFee    Float                // Processing fee in percentage
+  ltvRatio         Float                // Loan-to-value ratio (e.g., 0.75 for 75%)
+  status           LoanProductStatus    @default(ACTIVE)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  
+  loanApplications LoanApplication[]
+  
+  @@map("loan_products")
+}
+
+model Customer {
+  id               String               @id @default(uuid())
+  name             String
+  email            String               @unique
+  phone            String
+  panCard          String               @unique
+  address          String?
+  city             String?
+  pincode          String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  
+  loanApplications LoanApplication[]
+  
+  @@map("customers")
+}
+
+model LoanApplication {
+  id               String                  @id @default(uuid())
+  customerId       String
+  loanProductId    String
+  requestedAmount  Float
+  status           LoanApplicationStatus   @default(DRAFT)
+  applicationDate  DateTime                @default(now())
+  approvalDate     DateTime?
+  rejectionReason  String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  
+  customer         Customer                @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  loanProduct      LoanProduct             @relation(fields: [loanProductId], references: [id], onDelete: Restrict)
+  collaterals      Collateral[]
+  loan             Loan?
+  
+  @@map("loan_applications")
+}
+
+model Loan {
+  id                  String               @id @default(uuid())
+  loanApplicationId   String               @unique
+  sanctionedAmount    Float
+  disbursedAmount     Float
+  interestRate        Float
+  tenureMonths        Int
+  startDate           DateTime             @default(now())
+  endDate             DateTime
+  outstandingAmount   Float
+  status              LoanStatus           @default(ACTIVE)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  
+  loanApplication     LoanApplication      @relation(fields: [loanApplicationId], references: [id], onDelete: Cascade)
+  transactions        Transaction[]
+  
+  @@map("loans")
+}
+
+model Collateral {
+  id                  String               @id @default(uuid())
+  loanApplicationId   String
+  fundName            String               // Name of the mutual fund
+  folioNumber         String               // Folio number
+  units               Float                // Number of units
+  navPerUnit          Float                // NAV (Net Asset Value) per unit
+  totalValue          Float                // Total value = units * navPerUnit
+  pledgeDate          DateTime             @default(now())
+  status              CollateralStatus     @default(PLEDGED)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  
+  loanApplication     LoanApplication      @relation(fields: [loanApplicationId], references: [id], onDelete: Cascade)
+  
+  @@map("collaterals")
+}
+
+model Transaction {
+  id                  String               @id @default(uuid())
+  loanId              String
+  type                TransactionType
+  amount              Float
+  transactionDate     DateTime             @default(now())
+  referenceNumber     String?
+  notes               String?
+  createdAt           DateTime             @default(now())
+  
+  loan                Loan                 @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  
+  @@map("transactions")
+}
