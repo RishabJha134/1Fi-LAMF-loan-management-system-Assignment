@@ -1,9 +1,7 @@
 import prisma from '../config/prisma.js';
 
-// Get dashboard statistics
 export const getDashboardStats = async (req, res) => {
   try {
-    // Get counts
     const [
       totalCustomers,
       totalLoanProducts,
@@ -33,18 +31,15 @@ export const getDashboardStats = async (req, res) => {
       prisma.loanApplication.count({ where: { status: 'REJECTED' } })
     ]);
 
-    // Get total disbursed amount
     const totalDisbursed = await prisma.loan.aggregate({
       _sum: { disbursedAmount: true }
     });
 
-    // Get total outstanding amount
     const totalOutstanding = await prisma.loan.aggregate({
       where: { status: 'ACTIVE' },
       _sum: { outstandingAmount: true }
     });
 
-    // Get recent applications
     const recentApplications = await prisma.loanApplication.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
@@ -54,7 +49,6 @@ export const getDashboardStats = async (req, res) => {
       }
     });
 
-    // Get recent transactions
     const recentTransactions = await prisma.transaction.findMany({
       take: 5,
       orderBy: { transactionDate: 'desc' },

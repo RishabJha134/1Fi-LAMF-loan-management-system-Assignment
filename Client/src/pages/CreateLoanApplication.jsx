@@ -104,7 +104,6 @@ function CreateLoanApplication() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
     const product = getSelectedProduct();
     if (!product) {
       alert('Please select a loan product');
@@ -152,7 +151,7 @@ function CreateLoanApplication() {
 
       {error && <Alert type="error">{error}</Alert>}
 
-      {/* Progress Steps */}
+     
       <Card>
         <div className="flex justify-around mb-8">
           <div className="text-center">
@@ -183,7 +182,7 @@ function CreateLoanApplication() {
       </Card>
 
       <form onSubmit={handleSubmit}>
-        {/* Step 1: Customer Details */}
+       
         {step === 1 && (
           <Card>
             <h2 className="text-xl font-semibold text-gray-800 mb-6">Step 1: Customer Details</h2>
@@ -268,7 +267,7 @@ function CreateLoanApplication() {
           </Card>
         )}
 
-        {/* Step 2: Loan Details */}
+       
         {step === 2 && (
           <Card>
             <h2 className="text-xl font-semibold text-gray-800 mb-6">Step 2: Loan Details</h2>
@@ -326,7 +325,7 @@ function CreateLoanApplication() {
           </Card>
         )}
 
-        {/* Step 3: Collateral Details */}
+      
         {step === 3 && (
           <Card>
             <h2 className="text-xl font-semibold text-gray-800 mb-6">Step 3: Collateral Details (Mutual Funds)</h2>
@@ -431,7 +430,7 @@ function CreateLoanApplication() {
           </Card>
         )}
 
-        {/* Step 4: Review & Submit */}
+       
         {step === 4 && (
           <Card>
             <h2 className="text-xl font-semibold text-gray-800 mb-6">Step 4: Review & Submit</h2>

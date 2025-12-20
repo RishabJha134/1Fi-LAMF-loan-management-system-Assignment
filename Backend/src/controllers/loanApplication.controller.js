@@ -1,6 +1,5 @@
 import prisma from '../config/prisma.js';
 
-// Get all loan applications
 export const getAllLoanApplications = async (req, res) => {
   try {
     const { status, customerId } = req.query;
@@ -34,7 +33,6 @@ export const getAllLoanApplications = async (req, res) => {
   }
 };
 
-// Get single loan application
 export const getLoanApplicationById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -73,7 +71,6 @@ export const getLoanApplicationById = async (req, res) => {
   }
 };
 
-// Create new loan application (IMPORTANT - API for fintech companies)
 export const createLoanApplication = async (req, res) => {
   try {
     const {
@@ -83,7 +80,6 @@ export const createLoanApplication = async (req, res) => {
       collaterals
     } = req.body;
 
-    // Validation
     if (!customer || !loanProductId || !requestedAmount || !collaterals || collaterals.length === 0) {
       return res.status(400).json({
         success: false,
@@ -91,7 +87,6 @@ export const createLoanApplication = async (req, res) => {
       });
     }
 
-    // Validate loan product exists
     const loanProduct = await prisma.loanProduct.findUnique({
       where: { id: loanProductId }
     });
@@ -103,7 +98,6 @@ export const createLoanApplication = async (req, res) => {
       });
     }
 
-    // Validate requested amount
     if (requestedAmount < loanProduct.minLoanAmount || requestedAmount > loanProduct.maxLoanAmount) {
       return res.status(400).json({
         success: false,
@@ -111,12 +105,10 @@ export const createLoanApplication = async (req, res) => {
       });
     }
 
-    // Calculate total collateral value
     const totalCollateralValue = collaterals.reduce((sum, col) => {
       return sum + (parseFloat(col.units) * parseFloat(col.navPerUnit));
     }, 0);
 
-    // Check if collateral meets LTV ratio
     const maxLoanByLTV = totalCollateralValue * loanProduct.ltvRatio;
     if (requestedAmount > maxLoanByLTV) {
       return res.status(400).json({
@@ -125,7 +117,6 @@ export const createLoanApplication = async (req, res) => {
       });
     }
 
-    // Check if customer exists, if not create
     let existingCustomer = await prisma.customer.findFirst({
       where: {
         OR: [
@@ -149,7 +140,6 @@ export const createLoanApplication = async (req, res) => {
       });
     }
 
-    // Create loan application with collaterals
     const application = await prisma.loanApplication.create({
       data: {
         customerId: existingCustomer.id,
@@ -188,7 +178,6 @@ export const createLoanApplication = async (req, res) => {
   }
 };
 
-// Update loan application status (Approve/Reject)
 export const updateLoanApplicationStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -215,7 +204,6 @@ export const updateLoanApplicationStatus = async (req, res) => {
       });
     }
 
-    // If approving, create loan
     if (status === 'APPROVED' || status === 'DISBURSED') {
       const amount = sanctionedAmount || application.requestedAmount;
       const tenure = tenureMonths || 12;
@@ -223,7 +211,6 @@ export const updateLoanApplicationStatus = async (req, res) => {
       const endDate = new Date();
       endDate.setMonth(endDate.getMonth() + tenure);
 
-      // Update application and create loan
       const updatedApplication = await prisma.loanApplication.update({
         where: { id },
         data: {
@@ -268,7 +255,6 @@ export const updateLoanApplicationStatus = async (req, res) => {
       });
     }
 
-    // If rejecting
     if (status === 'REJECTED') {
       if (!rejectionReason) {
         return res.status(400).json({
@@ -297,7 +283,6 @@ export const updateLoanApplicationStatus = async (req, res) => {
       });
     }
 
-    // For other status updates
     const updatedApplication = await prisma.loanApplication.update({
       where: { id },
       data: { status },
@@ -322,7 +307,6 @@ export const updateLoanApplicationStatus = async (req, res) => {
   }
 };
 
-// Delete loan application
 export const deleteLoanApplication = async (req, res) => {
   try {
     const { id } = req.params;

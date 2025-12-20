@@ -126,7 +126,7 @@ function OngoingLoans() {
         />
       </Card>
 
-      {/* Recent Transactions for each loan */}
+     
       {loans.length > 0 && (
         <Card>
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Transactions</h2>

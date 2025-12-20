@@ -1,6 +1,5 @@
 import prisma from '../config/prisma.js';
 
-// Get all loan products
 export const getAllLoanProducts = async (req, res) => {
   try {
     const { status } = req.query;
@@ -26,7 +25,6 @@ export const getAllLoanProducts = async (req, res) => {
   }
 };
 
-// Get single loan product
 export const getLoanProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -62,7 +60,6 @@ export const getLoanProductById = async (req, res) => {
   }
 };
 
-// Create new loan product
 export const createLoanProduct = async (req, res) => {
   try {
     const {
@@ -77,7 +74,6 @@ export const createLoanProduct = async (req, res) => {
       status
     } = req.body;
 
-    // Validation
     if (!name || !interestRate || !maxLoanAmount || !minLoanAmount || !maxTenure || !processingFee || !ltvRatio) {
       return res.status(400).json({
         success: false,
@@ -113,13 +109,11 @@ export const createLoanProduct = async (req, res) => {
   }
 };
 
-// Update loan product
 export const updateLoanProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
 
-    // Convert numeric fields
     if (updateData.interestRate) updateData.interestRate = parseFloat(updateData.interestRate);
     if (updateData.maxLoanAmount) updateData.maxLoanAmount = parseFloat(updateData.maxLoanAmount);
     if (updateData.minLoanAmount) updateData.minLoanAmount = parseFloat(updateData.minLoanAmount);
@@ -152,7 +146,6 @@ export const updateLoanProduct = async (req, res) => {
   }
 };
 
-// Delete loan product
 export const deleteLoanProduct = async (req, res) => {
   try {
     const { id } = req.params;

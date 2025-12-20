@@ -1,6 +1,5 @@
 import prisma from '../config/prisma.js';
 
-// Get all loans (ongoing)
 export const getAllLoans = async (req, res) => {
   try {
     const { status } = req.query;
@@ -38,7 +37,6 @@ export const getAllLoans = async (req, res) => {
   }
 };
 
-// Get single loan
 export const getLoanById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -79,7 +77,6 @@ export const getLoanById = async (req, res) => {
   }
 };
 
-// Record loan repayment
 export const recordRepayment = async (req, res) => {
   try {
     const { id } = req.params;
@@ -113,7 +110,6 @@ export const recordRepayment = async (req, res) => {
     const repaymentAmount = parseFloat(amount);
     const newOutstanding = loan.outstandingAmount - repaymentAmount;
 
-    // Create transaction and update loan
     const transaction = await prisma.transaction.create({
       data: {
         loanId: id,
@@ -144,7 +140,6 @@ export const recordRepayment = async (req, res) => {
       }
     });
 
-    // If loan is closed, release collaterals
     if (newOutstanding <= 0) {
       await prisma.collateral.updateMany({
         where: {
@@ -170,7 +165,6 @@ export const recordRepayment = async (req, res) => {
   }
 };
 
-// Update loan status
 export const updateLoanStatus = async (req, res) => {
   try {
     const { id } = req.params;

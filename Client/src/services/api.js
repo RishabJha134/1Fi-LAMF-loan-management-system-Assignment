@@ -9,37 +9,31 @@ const api = axios.create({
   },
 });
 
-// Dashboard
 export const getDashboardStats = () => api.get('/dashboard');
 
-// Loan Products
 export const getAllLoanProducts = () => api.get('/loan-products');
 export const getLoanProductById = (id) => api.get(`/loan-products/${id}`);
 export const createLoanProduct = (data) => api.post('/loan-products', data);
 export const updateLoanProduct = (id, data) => api.put(`/loan-products/${id}`, data);
 export const deleteLoanProduct = (id) => api.delete(`/loan-products/${id}`);
 
-// Customers
 export const getAllCustomers = () => api.get('/customers');
 export const getCustomerById = (id) => api.get(`/customers/${id}`);
 export const createCustomer = (data) => api.post('/customers', data);
 export const updateCustomer = (id, data) => api.put(`/customers/${id}`, data);
 export const deleteCustomer = (id) => api.delete(`/customers/${id}`);
 
-// Loan Applications
 export const getAllLoanApplications = (params) => api.get('/loan-applications', { params });
 export const getLoanApplicationById = (id) => api.get(`/loan-applications/${id}`);
 export const createLoanApplication = (data) => api.post('/loan-applications', data);
 export const updateLoanApplicationStatus = (id, data) => api.put(`/loan-applications/${id}/status`, data);
 export const deleteLoanApplication = (id) => api.delete(`/loan-applications/${id}`);
 
-// Loans
 export const getAllLoans = (params) => api.get('/loans', { params });
 export const getLoanById = (id) => api.get(`/loans/${id}`);
 export const recordRepayment = (id, data) => api.post(`/loans/${id}/repayment`, data);
 export const updateLoanStatus = (id, data) => api.put(`/loans/${id}/status`, data);
 
-// Collaterals
 export const getAllCollaterals = (params) => api.get('/collaterals', { params });
 export const getCollateralsByApplicationId = (applicationId) => api.get(`/collaterals/application/${applicationId}`);
 export const getCollateralById = (id) => api.get(`/collaterals/${id}`);

@@ -1,6 +1,5 @@
 import prisma from '../config/prisma.js';
 
-// Get all customers
 export const getAllCustomers = async (req, res) => {
   try {
     const customers = await prisma.customer.findMany({
@@ -28,7 +27,6 @@ export const getAllCustomers = async (req, res) => {
   }
 };
 
-// Get single customer
 export const getCustomerById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -66,12 +64,10 @@ export const getCustomerById = async (req, res) => {
   }
 };
 
-// Create new customer
 export const createCustomer = async (req, res) => {
   try {
     const { name, email, phone, panCard, address, city, pincode } = req.body;
 
-    // Validation
     if (!name || !email || !phone || !panCard) {
       return res.status(400).json({
         success: false,
@@ -79,7 +75,6 @@ export const createCustomer = async (req, res) => {
       });
     }
 
-    // Check if email or PAN already exists
     const existingCustomer = await prisma.customer.findFirst({
       where: {
         OR: [
@@ -122,7 +117,6 @@ export const createCustomer = async (req, res) => {
   }
 };
 
-// Update customer
 export const updateCustomer = async (req, res) => {
   try {
     const { id } = req.params;
@@ -153,7 +147,6 @@ export const updateCustomer = async (req, res) => {
   }
 };
 
-// Delete customer
 export const deleteCustomer = async (req, res) => {
   try {
     const { id } = req.params;

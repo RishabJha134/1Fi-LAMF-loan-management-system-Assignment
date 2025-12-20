@@ -1,6 +1,6 @@
 import prisma from '../config/prisma.js';
 
-// Get all collaterals
+
 export const getAllCollaterals = async (req, res) => {
   try {
     const { status, loanApplicationId } = req.query;
@@ -37,7 +37,7 @@ export const getAllCollaterals = async (req, res) => {
   }
 };
 
-// Get collaterals for a loan application
+
 export const getCollateralsByApplicationId = async (req, res) => {
   try {
     const { applicationId } = req.params;
@@ -70,7 +70,6 @@ export const getCollateralsByApplicationId = async (req, res) => {
   }
 };
 
-// Get single collateral
 export const getCollateralById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -108,7 +107,6 @@ export const getCollateralById = async (req, res) => {
   }
 };
 
-// Create new collateral
 export const createCollateral = async (req, res) => {
   try {
     const {
@@ -160,7 +158,6 @@ export const createCollateral = async (req, res) => {
   }
 };
 
-// Update collateral status
 export const updateCollateralStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -206,7 +203,6 @@ export const updateCollateralStatus = async (req, res) => {
   }
 };
 
-// Delete collateral
 export const deleteCollateral = async (req, res) => {
   try {
     const { id } = req.params;

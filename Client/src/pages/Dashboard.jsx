@@ -37,7 +37,7 @@ function Dashboard() {
         subtitle="Overview of your loan management system"
       />
 
-      {/* Overview Statistics */}
+    
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Customers"
@@ -65,7 +65,7 @@ function Dashboard() {
         />
       </div>
 
-      {/* Financial Statistics */}
+   
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
           title="Total Disbursed"
@@ -87,7 +87,7 @@ function Dashboard() {
         />
       </div>
 
-      {/* Application Status Summary */}
+    
       <Card>
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Application Status</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -106,7 +106,7 @@ function Dashboard() {
         </div>
       </Card>
 
-      {/* Recent Applications */}
+     
       <Card>
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Loan Applications</h2>
         <Table
@@ -121,7 +121,7 @@ function Dashboard() {
         />
       </Card>
 
-      {/* Recent Transactions */}
+    
       <Card>
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Transactions</h2>
         <Table
